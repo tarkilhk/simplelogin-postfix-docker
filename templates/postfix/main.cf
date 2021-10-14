@@ -15,9 +15,13 @@ readme_directory = no
 
 # See http://www.postfix.org/COMPATIBILITY_README.html -- default to 2 on
 # fresh installs.
-compatibility_level = 2
+compatibility_level = 3.6
 
-# TLS parameters
+# TLS parameters for SMTP (outgoing mail)
+smtp_use_tls = yes
+smtp_tls_security_level = may
+
+# TLS parameters for SMPTD (incomming mail)
 {% if tls %}
 smtpd_use_tls = yes
 smtpd_tls_cert_file = {{ tls_cert }}
