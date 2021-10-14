@@ -54,15 +54,22 @@ def generate_postfix_config():
 
             # Use custom certificate if provided or use Let's Encrypt certificate.
             if environ.get('SSL_CERT_FOLDER') is not None:
+                print(f"Using custom certificate: {environ.get('SSL_CERT_FOLDER')}")
                 cert_file = Path(environ.get('SSL_CERT_FOLDER')) / LETSENCRYPT_CERTIFICATE
                 key_file = Path(environ.get('SSL_CERT_FOLDER')) / LETSENCRYPT_PRIVATE_KEY
             else:
+                print("Using Let's Encrypt certificate")
                 ssl_cert_folder = environ.get('POSTFIX_FQDN')
                 cert_file = LETSENCRYPT_CONFIG_DIR / ssl_cert_folder / LETSENCRYPT_CERTIFICATE
                 key_file = LETSENCRYPT_CONFIG_DIR / ssl_cert_folder / LETSENCRYPT_PRIVATE_KEY
-
+            
             # Check if certificates are present
             enable_tls = cert_file.is_file() and key_file.is_file()
+
+            if not enable_tls:
+                print(f"Certificate files are missing: {cert_file} and {key_file}")
+            else:
+                print("Certificate files are present")            
 
             # Generate config file.
             f.write(template.render(
