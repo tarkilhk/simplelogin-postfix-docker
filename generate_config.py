@@ -49,11 +49,19 @@ def generate_postfix_config():
         with (POSTFIX_CONFIG_DIR / config).open('w') as f:
             template = templates.get_template(f'postfix/{config}')
 
-            # Check if Certbot generated a TLS certificate.
-            postfix_fqdn = environ['POSTFIX_FQDN']
-            cert_file = LETSENCRYPT_CONFIG_DIR / postfix_fqdn / LETSENCRYPT_CERTIFICATE
-            key_file = LETSENCRYPT_CONFIG_DIR / postfix_fqdn / LETSENCRYPT_PRIVATE_KEY
+            cert_file = None
+            key_file = None
 
+            # Use custom certificate if provided or use Let's Encrypt certificate.
+            if environ.get('SSL_CERT_FOLDER') is not None:
+                cert_file = Path(environ.get('SSL_CERT_FOLDER')) / LETSENCRYPT_CERTIFICATE
+                key_file = Path(environ.get('SSL_CERT_FOLDER')) / LETSENCRYPT_PRIVATE_KEY
+            else:
+                ssl_cert_folder = environ.get('POSTFIX_FQDN')
+                cert_file = LETSENCRYPT_CONFIG_DIR / ssl_cert_folder / LETSENCRYPT_CERTIFICATE
+                key_file = LETSENCRYPT_CONFIG_DIR / ssl_cert_folder / LETSENCRYPT_PRIVATE_KEY
+
+            # Check if certificates are present
             enable_tls = cert_file.is_file() and key_file.is_file()
 
             # Generate config file.
@@ -68,7 +76,8 @@ def generate_postfix_config():
 def main():
     """Generate Certbot and/or Postfix's configuration files."""
     try:
-        if '--certbot' in sys.argv or len(sys.argv) == 1:
+        # Activate certbot if config doesn't provide a certificate.
+        if ('--certbot' in sys.argv or len(sys.argv) == 1) and environ.get('SSL_CERT_FOLDER') is None:
             generate_certbot_config()
 
         if '--postfix' in sys.argv or len(sys.argv) == 1:
