@@ -25,10 +25,6 @@ jobs:
         shell: bash
         run: echo "LOWER_CASE_REPO_NAME=$(echo ${GITHUB_REPOSITORY} | tr /A-Z/ /a-z/)" >> $GITHUB_ENV
 
-      - name: Check value of env.LOWER_CASE_REPO_NAME
-        shell: bash
-        run: echo ${{ env.LOWER_CASE_REPO_NAME }}
-
       ## Configure, build and push docker image
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
