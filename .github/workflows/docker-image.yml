@@ -11,6 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      ## Setup environment variables
       - name: Set branch name as Docker image tag
         if: github.event_name != 'pull_request'
         shell: bash
