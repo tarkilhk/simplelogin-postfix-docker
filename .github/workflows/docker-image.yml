@@ -11,21 +11,23 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      ## START SET CORRECT DOCKER TAG
-      - name: Get branch name (merge)
+      - name: Set branch name as Docker image tag
         if: github.event_name != 'pull_request'
         shell: bash
         run: echo "BRANCH_NAME=$(echo ${GITHUB_REF#refs/heads/} | tr / -)" >> $GITHUB_ENV
 
-      - name: Replace master/main Branch Names with latest
+      - name: Replace master or main branch with latest tag
         if: env.BRANCH_NAME == 'main' || env.BRANCH_NAME == 'master'
         shell: bash
         run: echo "BRANCH_NAME=latest" >> $GITHUB_ENV
-
-      - name: Check value of env.BRANCH_NAME
+      
+      - name: Store repo name and owner in lower case
         shell: bash
-        run: echo ${{ env.BRANCH_NAME }}
-      ## END SET CORRECT DOCKER TAG
+        run: echo "LOWER_CASE_REPO_NAME=$(echo ${GITHUB_REPOSITORY} | tr /a-z/ /A-Z/)" >> $GITHUB_ENV
+
+      - name: Check value of env.LOWER_CASE_REPO_NAME
+        shell: bash
+        run: echo ${{ env.LOWER_CASE_REPO_NAME }}
 
       ## Configure, build and push docker image
       - name: Set up Docker Buildx
@@ -38,6 +40,7 @@ jobs:
           key: ${{ runner.os }}-buildx-${{ github.sha }}
           restore-keys: |
             ${{ runner.os }}-buildx-
+            
       - name: Login to Docker registry
         uses: docker/login-action@v1
         with:
@@ -49,8 +52,8 @@ jobs:
         uses: docker/build-push-action@v2.6.1
         with:
           context: .
-          # Don't push draft pull requests
-          push: ${{ github.event.pull_request.draft == false && (env.BRANCH_NAME == 'development' || env.BRANCH_NAME == 'latest') }}
-          tags: ghcr.io/lordchunk/${{ github.event.repository.name }}:${{ env.BRANCH_NAME }}
+          # Only push development and main branches
+          push: ${{ env.BRANCH_NAME == 'development' || env.BRANCH_NAME == 'latest' }}
+          tags: ghcr.io/${{ env.LOWER_CASE_REPO_NAME }}:${{ env.BRANCH_NAME }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
