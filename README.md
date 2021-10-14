@@ -27,10 +27,6 @@ Setting     | Description
 
 \* automatic renewal is managed with [Certbot](https://certbot.eff.org/) and shouldn't fail, unless you have reached Let's Encrypt [rate limits](https://letsencrypt.org/docs/rate-limits/)
 
-Used by and made for [Kloügle](https://github.com/arugifa/klougle), the Google
-alternative automated with [Terraform](https://www.terraform.io/).
-
-
 ## Troubleshooting
 
 If you don't receive emails from SimpleLogin, have a look to Postfix logs:
