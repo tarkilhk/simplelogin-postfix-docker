@@ -21,7 +21,7 @@ compatibility_level = 3.6
 smtp_use_tls = yes
 smtp_tls_security_level = may
 
-# TLS parameters for SMPTD (incomming mail)
+# TLS parameters for SMPTD (incoming mail)
 {% if tls %}
 smtpd_use_tls = yes
 smtp_tls_security_level = may
