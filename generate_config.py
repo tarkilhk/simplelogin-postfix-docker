@@ -49,12 +49,28 @@ def generate_postfix_config():
         with (POSTFIX_CONFIG_DIR / config).open('w') as f:
             template = templates.get_template(f'postfix/{config}')
 
-            # Check if Certbot generated a TLS certificate.
-            postfix_fqdn = environ['POSTFIX_FQDN']
-            cert_file = LETSENCRYPT_CONFIG_DIR / postfix_fqdn / LETSENCRYPT_CERTIFICATE
-            key_file = LETSENCRYPT_CONFIG_DIR / postfix_fqdn / LETSENCRYPT_PRIVATE_KEY
+            cert_file = None
+            key_file = None
 
+            # Use custom certificate if provided or use Let's Encrypt certificate.
+            if environ.get('SSL_CERT_FOLDER') is not None:
+                print(f"Using custom certificate: {environ.get('SSL_CERT_FOLDER')}")
+                cert_file = Path(environ.get('SSL_CERT_FOLDER')) / LETSENCRYPT_CERTIFICATE
+                key_file = Path(environ.get('SSL_CERT_FOLDER')) / LETSENCRYPT_PRIVATE_KEY
+            else:
+                print("Using Let's Encrypt certificate")
+                ssl_cert_folder = environ.get('POSTFIX_FQDN')
+                cert_file = LETSENCRYPT_CONFIG_DIR / ssl_cert_folder / LETSENCRYPT_CERTIFICATE
+                key_file = LETSENCRYPT_CONFIG_DIR / ssl_cert_folder / LETSENCRYPT_PRIVATE_KEY
+            
+            # Check if certificate and key files exist. 
             enable_tls = cert_file.is_file() and key_file.is_file()
+            
+
+            if not enable_tls:
+                print(f"Certificate files are missing: {cert_file} and {key_file}")
+            else:
+                print("Certificate files are present")            
 
             # Generate config file.
             f.write(template.render(
@@ -68,7 +84,8 @@ def generate_postfix_config():
 def main():
     """Generate Certbot and/or Postfix's configuration files."""
     try:
-        if '--certbot' in sys.argv or len(sys.argv) == 1:
+        # Activate certbot if config doesn't provide a certificate.
+        if ('--certbot' in sys.argv or len(sys.argv) == 1) and environ.get('SSL_CERT_FOLDER') is None:
             generate_certbot_config()
 
         if '--postfix' in sys.argv or len(sys.argv) == 1:

@@ -6,6 +6,8 @@ currently exists.
 Let's fix that, by providing to the community something very lightweight,
 secure\* (with [Let's Encrypt](https://letsencrypt.org/) support) and simple to use 💖
 
+**Compatibility:** this image has been tested in a production environment with SimpleLogin **3.4.0**
+
 \* if a TLS certificate cannot be automatically generated when starting the container, Postfix will run without TLS activated, until the next attempt (happens every hour)
 
 Can be configured with the following environment variables:
@@ -21,6 +23,7 @@ Setting     | Description
 **LETSENCRYPT_EMAIL** | Email address used by Let's Encrypt, to send you expiry notices\*.
 **POSTFIX_FQDN** | Fully Qualified Domain Name of your Postfix instance (i.e., the MX server address you configured in your DNS zone for your **ALIASES_DEFAULT_DOMAIN**).
 **RELAY_HOST** | If your Postfix instance's IP address is blacklisted (e.g., because it is not a static address), you must use your Internet Service Provider's mail server as a relay, to be able to send emails to the outer world.
+**SSL_CERT_FOLDER** | Custom folder location for storing your own SSL certificate. This **disables** Let's Encrypt. Useful if you use a reverse proxy which manages your certificates. The certificate file name should be: ``fullchain.pem`` and the private key's file name should be: ``privkey.pem``.
 
 \* automatic renewal is managed with [Certbot](https://certbot.eff.org/) and shouldn't fail, unless you have reached Let's Encrypt [rate limits](https://letsencrypt.org/docs/rate-limits/)
 
