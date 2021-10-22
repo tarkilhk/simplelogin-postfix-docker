@@ -1,5 +1,9 @@
 version: "3"
 
+secrets:
+  db_password:
+    file: ./test-data/db_password
+
 services:
   simplelogin-postfix:
     build: .
@@ -7,14 +11,17 @@ services:
       ALIASES_DEFAULT_DOMAIN: mydomain.com
       DB_HOST: localhost
       DB_USER: myuser
-      DB_PASSWORD: mypassword
+      # DB_PASSWORD: mypassword
+      DB_PASSWORD_FILE: '/run/secrets/db_password'
       DB_NAME: simplelogin
       LETSENCRYPT_EMAIL: support@mydomain.com
       EMAIL_HANDLER_HOST: 127.0.0.1
       POSTFIX_FQDN: mail.mydomain.com
       RELAY_HOST: myisp.internet.com
       # SSL_CERT_FOLDER: /mnt/certs
-
+    secrets:
+      - db_password
+  
   sut:
     image: alpine:latest
     # Wait for Postfix to start:
