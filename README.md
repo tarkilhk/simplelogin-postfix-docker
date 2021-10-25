@@ -17,7 +17,7 @@ Setting     | Description
 **ALIASES_DEFAULT_DOMAIN** | Default domain to use for your aliases.
 **DB_HOST** | Where is hosted your SimpleLogin PostgreSQL database.
 **DB_USER** | User to connect to the database.
-**DB_PASSWORD** | User's password to connect to the database.
+**DB_PASSWORD** | User's password to connect to the database. You can also use **DB_PASSWORD_FILE** if using with docker secrets.
 **DB_NAME** | Name of the database.
 **EMAIL_HANDLER_HOST** | Where is hosted your SimpleLogin email handler instance.
 **LETSENCRYPT_EMAIL** | Email address used by Let's Encrypt, to send you expiry notices\*.
