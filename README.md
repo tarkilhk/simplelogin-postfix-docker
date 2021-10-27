@@ -30,6 +30,9 @@ Setting     | Description
 Used by and made for [Kloügle](https://github.com/arugifa/klougle), the Google
 alternative automated with [Terraform](https://www.terraform.io/).
 
+## Examples
+
+There are some example compose files in `examples` that show how to use this container in different scenarios.
 
 ## Troubleshooting
 

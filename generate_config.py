@@ -84,8 +84,7 @@ def generate_postfix_config():
 def main():
     """Generate Certbot and/or Postfix's configuration files."""
     try:
-        # Activate certbot if config doesn't provide a certificate.
-        if ('--certbot' in sys.argv or len(sys.argv) == 1) and environ.get('SSL_CERT_FOLDER') is None:
+        if '--certbot' in sys.argv or len(sys.argv) == 1:
             generate_certbot_config()
 
         if '--postfix' in sys.argv or len(sys.argv) == 1:
