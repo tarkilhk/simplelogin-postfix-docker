@@ -17,7 +17,6 @@ RUN apk add --update --no-cache \
 # Install Python dependencies.
 RUN python3 -m ensurepip && pip3 install jinja2==3.1.2
 
-
 # Copy sources.
 COPY generate_config.py /src/
 COPY scripts/certbot-renew-crontab.sh /etc/periodic/hourly/renew-postfix-tls
