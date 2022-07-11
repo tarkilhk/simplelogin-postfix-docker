@@ -24,7 +24,7 @@ smtp_tls_security_level = may
 #Below is attempt to connect to netvigator relay host
 #smtp_tls_wrappermode = yes
 
-inet_protocols = ipv4
+#inet_protocols = ipv4
 
 # TLS parameters for SMPTD (incoming mail)
 {% if tls %}
@@ -81,6 +81,8 @@ smtpd_recipient_restrictions =
    reject_rbl_client zen.spamhaus.org,
    reject_rbl_client bl.spamcop.net,
    permit
+
+smtp_tls_policy_maps = hash:/etc/postfix/tls_policy
 
 # General TLS security improvements
 # Based on: https://kruyt.org/postfix-and-tls-encryption/

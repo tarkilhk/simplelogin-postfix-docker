@@ -23,6 +23,7 @@ COPY scripts/certbot-renew-crontab.sh /etc/periodic/hourly/renew-postfix-tls
 COPY scripts/certbot-renew-posthook.sh /etc/letsencrypt/renewal-hooks/post/reload-postfix.sh
 COPY templates /src/templates
 COPY entrypoint.sh /src/docker-entrypoint.sh
+COPY templates/postfix/tls_policy /etc/postfix/tls_policy
 
 # Generate config, ask for a TLS certificate to Let's Encrypt, start Postfix and Cron daemon.
 WORKDIR /src
