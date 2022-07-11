@@ -106,6 +106,7 @@ relayhost = {{ env['RELAY_HOST'] }}
 {% if 'RELAY_HOST_USERNAME' in env and 'RELAY_HOST_PASSWORD' in env %}
 # Enable auth
 smtp_sasl_auth_enable = yes
+smtp_sasl_type = cyrus
 # Set username and password
 smtp_sasl_password_maps = static:{{ env['RELAY_HOST_USERNAME'] }}:{{ env['RELAY_HOST_PASSWORD'] }}
 smtp_sasl_security_options = noanonymous
