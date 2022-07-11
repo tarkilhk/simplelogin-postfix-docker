@@ -19,7 +19,10 @@ compatibility_level = 3.6
 
 # TLS parameters for SMTP (outgoing mail)
 smtp_use_tls = yes
+smtp_tls_wrappermode = yes
 smtp_tls_security_level = may
+
+#inet_protocols = ipv4
 
 # TLS parameters for SMPTD (incoming mail)
 {% if tls %}
